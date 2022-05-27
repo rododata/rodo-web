@@ -9,9 +9,14 @@ const axios = Axios.create({
 export type GraphData = [string, number];
 export type GraphResult = Array<GraphData>;
 
+export type Dataset = {
+    label: string;
+};
+
 export type Card = {
     id: number;
     name: string;
+    datasets: Dataset[];
 };
 
 export type Dashboard = {

@@ -21,7 +21,7 @@
         }));
 
         const config: ChartConfiguration = {
-            type: "bar", // TODO: customizable from API
+            type: data.type,
             data: { labels, datasets },
             options: {
                 maintainAspectRatio: false,

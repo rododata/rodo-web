@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import type { ChartType } from 'chart.js';
 
 const RODODATA_API_URL = import.meta.env['VITE_RODODATA_API_URL'];
 
@@ -16,6 +17,7 @@ export type Dataset = {
 export type Card = {
     id: number;
     name: string;
+    type?: ChartType;
     datasets: Dataset[];
 };
 

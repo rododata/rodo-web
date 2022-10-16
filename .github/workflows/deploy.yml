@@ -1,0 +1,21 @@
+name: Firebase Hosting
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  VITE_RODODATA_API_URL: https://api.rododata.com
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: npm ci && npm run build
+      - name: Deploy
+        run: |
+          sudo npm i -g firebase-tools --unsafe-perm
+          firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}

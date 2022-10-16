@@ -20,9 +20,7 @@
     <div class="dialog">
         <div class="content">
             <div class="header">
-                <i on:click={() => (visible = false)} class="material-icons">
-                    close
-                </i>
+                <i on:click={close} class="material-icons">close</i>
             </div>
             <slot {close} />
         </div>

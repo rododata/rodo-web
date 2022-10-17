@@ -9,9 +9,6 @@ const axios = Axios.create({
     baseURL: RODODATA_API_URL
 });
 
-export type GraphData = [string, number];
-export type GraphResult = Array<GraphData>;
-
 export type Dataset = {
     label: string;
 };
@@ -87,13 +84,13 @@ export namespace Rododata {
         return data;
     }
 
-    export async function getCardData(id: number): Promise<GraphResult> {
+    export async function getCardData(id: number): Promise<QueryResult> {
         const { data } = await axios.get(`/graphs/${id}`);
 
         return data;
     }
 
-    export async function getCardDataWithFilters(id: number, query: QueryType): Promise<GraphResult> {
+    export async function getCardDataWithFilters(id: number, query: QueryType): Promise<QueryResult> {
         const { data } = await axios.post(`/graphs/filter/${id}`, [query]);
 
         return data;

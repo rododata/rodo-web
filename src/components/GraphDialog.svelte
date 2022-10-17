@@ -37,7 +37,7 @@
         const labels = query.data.map(([label]) => label);
         const datasets = [
             {
-                label: query.labels[0],
+                label: query.labels.pop(),
                 backgroundColor: generateColor(),
                 data: query.data.map(([, value]) => value as number),
             },

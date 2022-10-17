@@ -1,9 +1,9 @@
 <script lang="ts" context="module">
-    import type { Card, GraphResult, QueryType } from "../lib/Rododata";
+    import type { Card, QueryResult, QueryType } from "../lib/Rododata";
 
     export type CardElement = Omit<Card, "id"> & {
         options?: ChartConfiguration | null;
-        fetch: (query?: QueryType | null) => Promise<GraphResult>;
+        fetch: (query?: QueryType | null) => Promise<QueryResult>;
     };
 </script>
 
@@ -40,10 +40,13 @@
         const cardData = await data.fetch();
         loading = false;
 
-        const labels: string[] = cardData.map(([label]) => label);
+        const labels: string[] = cardData.data.map(
+            ([label]) => label as string
+        );
         const datasets: ChartDataset[] = data.datasets.map(() => ({
+            label: cardData.labels.pop(),
             backgroundColor: generateColor(),
-            data: cardData.map(([, value]) => value),
+            data: cardData.data.map(([, value]) => value as number),
         }));
 
         const config: ChartConfiguration = {
@@ -66,10 +69,12 @@
         filter = query;
 
         loading = true;
-        const cardData: GraphResult = await data.fetch(query);
+        const cardData = await data.fetch(query);
         loading = false;
 
-        chart.data.datasets[0].data = cardData.map(([, value]) => value);
+        chart.data.datasets[0].data = cardData.data.map(
+            ([, value]) => value as number
+        );
         chart.update();
     };
 </script>

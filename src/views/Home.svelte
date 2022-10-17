@@ -5,7 +5,7 @@
     import GraphDialog from "../components/GraphDialog.svelte";
 
     import { dashboards } from "../lib/store";
-    import { GraphResult, Rododata } from "../lib/Rododata";
+    import { Rododata } from "../lib/Rododata";
 
     let cards: CardElement[] = [];
     const unsubscribe = dashboards.subscribe((data) => {
@@ -32,12 +32,10 @@
             filters: [],
             fetch: async (_query) => {
                 if (_query) {
-                    const { data } = await Rododata.query([_query]);
-                    return data as GraphResult;
+                    return Rododata.query([_query]);
                 }
 
-                const { data } = await Rododata.query([query]);
-                return data as GraphResult;
+                return Rododata.query([query]);
             },
         };
 

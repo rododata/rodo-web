@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { cloneDeep } from "lodash";
     import { createEventDispatcher, onMount } from "svelte";
     import { Chart } from "chart.js";
 
@@ -77,9 +78,9 @@
         const { name } = availableFields.find(({ id }) => id === model.fieldId);
 
         const data = {
-            config: chart.config["_config"],
+            config: cloneDeep(chart.config["_config"]),
             name: [FilterTypeLabel[model.type], name].join(" "),
-            query: JSON.parse(JSON.stringify(model)),
+            query: cloneDeep(model),
         };
 
         dispatch("save", data);

@@ -2,7 +2,7 @@
     import Home from "./views/Home.svelte";
 </script>
 
-<main class="w-screen h-screen p-4">
+<main>
     <Home />
 </main>
 
@@ -10,6 +10,10 @@
     @tailwind base;
     @tailwind components;
     @tailwind utilities;
+
+    main {
+        @apply w-full h-full p-4;
+    }
 
     button {
         @apply flex justify-center items-center;

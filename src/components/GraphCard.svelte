@@ -158,7 +158,7 @@
                 @apply flex items-center justify-end;
 
                 > i {
-                    @apply p-1;
+                    @apply p-1 ml-2;
                     @apply rounded shadow;
                     @apply border border-neutral-200 cursor-pointer;
                 }

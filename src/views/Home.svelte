@@ -7,11 +7,12 @@
 
     import { dashboards } from "../lib/store";
     import { getStore } from "../lib/storage";
-    import { QueryType, Rododata } from "../lib/Rododata";
+    import { FilterableField, QueryType, Rododata } from "../lib/Rododata";
 
     type CustomQuery = {
         config: ChartConfiguration;
         name: string;
+        filters: FilterableField[];
         query: QueryType;
     };
 
@@ -39,7 +40,7 @@
 
     const addCard = (event: SaveEvent) => {
         const { id } = event;
-        const { config, name, query } = event.data;
+        const { config, name, filters, query } = event.data;
 
         const card: CardElement = {
             id,
@@ -47,10 +48,10 @@
             name,
             type: config.type,
             datasets: config.data.datasets.map(({ label }) => ({ label })),
-            filters: [],
+            filters,
             fetch: async (_query) => {
                 if (_query) {
-                    return Rododata.query([_query]);
+                    return Rododata.query([query, _query]);
                 }
 
                 return Rododata.query([query]);

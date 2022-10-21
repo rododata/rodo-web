@@ -62,7 +62,9 @@
 </script>
 
 <div class="title">Análise de Acidentes registrados pela PRF</div>
-<GraphDialog on:save={(e) => addCard(e.detail)} />
+<div class="action">
+    <GraphDialog on:save={(e) => addCard(e.detail)} />
+</div>
 <div class="dashboard">
     {#each cards as card}
         <div>
@@ -73,8 +75,12 @@
 
 <style lang="postcss">
     div.title {
-        @apply py-2;
+        @apply py-2 px-2;
         @apply text-4xl text-center font-medium;
+    }
+
+    div.action {
+        @apply px-2;
     }
 
     div.dashboard {

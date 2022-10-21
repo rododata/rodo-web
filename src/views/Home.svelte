@@ -1,11 +1,19 @@
 <script lang="ts">
-    import { onDestroy } from "svelte";
+    import { onDestroy, onMount } from "svelte";
+    import type { ChartConfiguration } from "chart.js";
 
     import GraphCard, { CardElement } from "../components/GraphCard.svelte";
     import GraphDialog from "../components/GraphDialog.svelte";
 
     import { dashboards } from "../lib/store";
-    import { Rododata } from "../lib/Rododata";
+    import { getStore } from "../lib/storage";
+    import { QueryType, Rododata } from "../lib/Rododata";
+
+    type CustomQuery = {
+        config: ChartConfiguration;
+        name: string;
+        query: QueryType;
+    };
 
     let cards: CardElement[] = [];
     const unsubscribe = dashboards.subscribe((data) => {
@@ -20,10 +28,9 @@
         }));
     });
 
-    Rododata.getDashboards().then((data) => dashboards.set(data));
     onDestroy(unsubscribe);
 
-    const addCard = ({ config, name, query }) => {
+    const addCard = ({ config, name, query }: CustomQuery) => {
         const card: CardElement = {
             options: config,
             name,
@@ -41,6 +48,17 @@
 
         cards = [...cards, card];
     };
+
+    onMount(async () => {
+        await Rododata.getDashboards().then((data) => {
+            dashboards.set(data);
+        });
+
+        const store = await getStore<CustomQuery>("queries");
+        const data = await store.list();
+
+        data.forEach((e) => addCard(e));
+    });
 </script>
 
 <div class="title">Análise de Acidentes registrados pela PRF</div>

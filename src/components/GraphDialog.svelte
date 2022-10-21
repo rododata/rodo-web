@@ -16,6 +16,7 @@
         Rododata,
     } from "../lib/Rododata";
     import { queryableFields } from "../lib/store";
+    import { getStore } from "../lib/storage";
     import { generateColor, setChartType } from "../lib/commons";
 
     const dispatch = createEventDispatcher();
@@ -74,7 +75,8 @@
         }
     };
 
-    const saveGraph = () => {
+    const saveGraph = async (close: () => void) => {
+        const store = await getStore("queries");
         const { name } = availableFields.find(({ id }) => id === model.fieldId);
 
         const data = {
@@ -83,7 +85,11 @@
             query: cloneDeep(model),
         };
 
+        await store.save(data);
+        store.commit();
+
         dispatch("save", data);
+        close();
     };
 
     const onClose = () => {
@@ -170,7 +176,7 @@
         <canvas bind:this={canvas} />
     </div>
     <div class="actions">
-        <button on:click={() => (saveGraph(), close())}>Salvar</button>
+        <button on:click={() => saveGraph(close)}>Salvar</button>
     </div>
 </Dialog>
 

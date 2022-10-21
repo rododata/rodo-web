@@ -62,7 +62,6 @@
             data: { labels, datasets },
         };
 
-        console.log(config);
         chart = new Chart(canvas, config);
         setChartType(chart, config.type || "bar");
     });

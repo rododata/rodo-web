@@ -91,6 +91,12 @@
             type: null,
             fieldId: null,
         };
+
+        if (chart !== null) {
+            chart.destroy();
+        }
+
+        chart = null;
     };
 </script>
 

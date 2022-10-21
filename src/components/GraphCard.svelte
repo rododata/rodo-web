@@ -18,22 +18,29 @@
     import ProgressCircular from "./ProgressCircular.svelte";
 
     export let data: CardElement;
-    export let chartOptions: ChartConfiguration = {
-        type: data.type,
-        data: {
-            labels: [],
-            datasets: [],
-        },
-        options: {
-            maintainAspectRatio: false,
-            responsive: true,
-        },
-    };
-
+    export let chartOptions: ChartConfiguration;
     let loading = false;
 
     let canvas: HTMLCanvasElement;
     let chart: Chart;
+
+    const getConfiguration = () => {
+        if (chartOptions) {
+            return chartOptions;
+        }
+
+        return {
+            type: data.type,
+            data: {
+                labels: [],
+                datasets: [],
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+            },
+        };
+    };
 
     onMount(async () => {
         loading = true;
@@ -49,11 +56,13 @@
             data: cardData.data.map(([, value]) => value as number),
         }));
 
+        const options = getConfiguration();
         const config: ChartConfiguration = {
-            ...chartOptions,
+            ...options,
             data: { labels, datasets },
         };
 
+        console.log(config);
         chart = new Chart(canvas, config);
         setChartType(chart, config.type || "bar");
     });

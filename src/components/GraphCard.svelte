@@ -131,14 +131,6 @@
             > div.title {
                 @apply text-center font-medium text-xl;
             }
-
-            > section {
-                @apply flex space-x-2;
-
-                > select {
-                    @apply w-full;
-                }
-            }
         }
 
         > div.details {

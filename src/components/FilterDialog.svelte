@@ -42,8 +42,8 @@
 </script>
 
 <Dialog let:close>
-    <div class="filter" slot="activator" let:open on:click={open}>
-        <i class="material-icons">filter_alt</i>
+    <div class="filter" slot="activator" let:open>
+        <i class="material-icons" on:click={open}>filter_alt</i>
     </div>
     <div class="form">
         <div>

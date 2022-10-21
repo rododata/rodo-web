@@ -42,9 +42,7 @@
 </script>
 
 <Dialog let:close>
-    <div class="filter" slot="activator" let:open>
-        <i class="material-icons" on:click={open}>filter_alt</i>
-    </div>
+    <slot slot="activator" let:open {open} />
     <div class="form">
         <div>
             <span>Tipo:</span>
@@ -85,16 +83,6 @@
 <style lang="postcss">
     div.form {
         @apply space-y-2 py-4;
-    }
-
-    div.filter {
-        @apply flex items-center justify-end;
-
-        > i {
-            @apply p-1;
-            @apply rounded shadow;
-            @apply border border-neutral-200 cursor-pointer;
-        }
     }
 
     div.actions {

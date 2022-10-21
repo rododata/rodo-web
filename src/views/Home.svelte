@@ -15,23 +15,34 @@
         query: QueryType;
     };
 
+    type SaveEvent = {
+        id: number;
+        data: CustomQuery;
+    };
+
     let cards: CardElement[] = [];
     const unsubscribe = dashboards.subscribe((data) => {
         const _cards = data.map((e) => e.cards).flat();
-        cards = _cards.map(({ id, ...card }) => ({
+        cards = _cards.map((card) => ({
             ...card,
             fetch: (query) => {
-                if (query) return Rododata.getCardDataWithFilters(id, query);
+                if (query) {
+                    return Rododata.getCardDataWithFilters(card.id, query);
+                }
 
-                return Rododata.getCardData(id);
+                return Rododata.getCardData(card.id);
             },
         }));
     });
 
     onDestroy(unsubscribe);
 
-    const addCard = ({ config, name, query }: CustomQuery) => {
+    const addCard = (event: SaveEvent) => {
+        const { id } = event;
+        const { config, name, query } = event.data;
+
         const card: CardElement = {
+            id,
             options: config,
             name,
             type: config.type,
@@ -43,6 +54,16 @@
                 }
 
                 return Rododata.query([query]);
+            },
+            destroy: async () => {
+                const store = await getStore<CustomQuery>("queries");
+
+                await store.remove(id);
+                store.commit();
+
+                const i = cards.findIndex((e) => e.id === id);
+                cards.splice(i, 1);
+                cards = cards;
             },
         };
 
@@ -57,7 +78,7 @@
         const store = await getStore<CustomQuery>("queries");
         const data = await store.list();
 
-        data.forEach((e) => addCard(e));
+        data.forEach(({ id, value: data }) => addCard({ id, data }));
     });
 </script>
 

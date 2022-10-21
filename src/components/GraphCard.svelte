@@ -1,8 +1,9 @@
 <script lang="ts" context="module">
     import type { Card, QueryResult, QueryType } from "../lib/Rododata";
 
-    export type CardElement = Omit<Card, "id"> & {
+    export type CardElement = Card & {
         options?: ChartConfiguration | null;
+        destroy?: () => void;
         fetch: (query?: QueryType | null) => Promise<QueryResult>;
     };
 </script>
@@ -14,6 +15,7 @@
     import { generateColor, setChartType } from "../lib/commons";
     import { FilterTypeLabel } from "../lib/Rododata";
 
+    import DeleteDialog from "./DeleteDialog.svelte";
     import FilterDialog from "./FilterDialog.svelte";
     import ProgressCircular from "./ProgressCircular.svelte";
 
@@ -91,14 +93,26 @@
     <div class="header">
         <div />
         <div class="title">{data.name}</div>
-        {#if data.filters && data.filters.length}
-            <div>
+        <div class="actions">
+            {#if data.destroy}
+                <DeleteDialog let:open on:confirm={() => data.destroy()}>
+                    <i
+                        class="material-icons"
+                        style="color: rgb(220 38 38);"
+                        on:click={open}>delete</i
+                    >
+                </DeleteDialog>
+            {/if}
+            {#if data.filters && data.filters.length}
                 <FilterDialog
+                    let:open
                     filters={data.filters}
                     on:input={({ detail }) => onChartFilter(detail)}
-                />
-            </div>
-        {/if}
+                >
+                    <i class="material-icons" on:click={open}>filter_alt</i>
+                </FilterDialog>
+            {/if}
+        </div>
     </div>
     {#if filter}
         <div class="details">
@@ -138,6 +152,16 @@
 
             > div.title {
                 @apply text-center font-medium text-xl;
+            }
+
+            > div.actions {
+                @apply flex items-center justify-end;
+
+                > i {
+                    @apply p-1;
+                    @apply rounded shadow;
+                    @apply border border-neutral-200 cursor-pointer;
+                }
             }
         }
 

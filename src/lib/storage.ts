@@ -28,14 +28,29 @@ export const getStore = async <T>(name: string) => {
     const commit = () =>
         transaction.commit();
 
-    const list = () =>
-        new Promise<T[]>((resolve, reject) => {
-            const request = store.getAll();
+    const get = <T>(id: number) =>
+        new Promise<T>((resolve, reject) => {
+            const request = store.get(id);
 
             request.onsuccess = () => {
                 const { result } = request;
-                const list = result.map(
-                    (data: string) => JSON.parse(data) as T
+                resolve(JSON.parse(result));
+            };
+
+            request.onerror = (event) => reject(event);
+        });
+
+    const list = () =>
+        new Promise<{ id: number, value: T }[]>((resolve, reject) => {
+            const request = store.getAllKeys();
+
+            request.onsuccess = () => {
+                const { result } = request;
+                const list = Promise.all(
+                    result.map(async id => ({
+                        id: id as number,
+                        value: await get<T>(id as number)
+                    }))
                 );
 
                 resolve(list);
@@ -44,13 +59,21 @@ export const getStore = async <T>(name: string) => {
             request.onerror = (event) => reject(event);
         });
 
-    const save = (object: T) =>
+    const remove = (id: number) =>
         new Promise<void>((resolve, reject) => {
-            const request = store.add(JSON.stringify(object));
+            const request = store.delete(id);
 
             request.onsuccess = () => resolve();
             request.onerror = (event) => reject(event);
         });
 
-    return { commit, list, save };
+    const save = (object: T) =>
+        new Promise<number>((resolve, reject) => {
+            const request = store.add(JSON.stringify(object));
+
+            request.onsuccess = () => resolve(request.result as number);
+            request.onerror = (event) => reject(event);
+        });
+
+    return { commit, get, list, remove, save };
 };

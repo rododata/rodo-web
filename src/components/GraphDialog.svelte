@@ -85,10 +85,10 @@
             query: cloneDeep(model),
         };
 
-        await store.save(data);
+        const id = await store.save(data);
         store.commit();
 
-        dispatch("save", data);
+        dispatch("save", { id, data });
         close();
     };
 

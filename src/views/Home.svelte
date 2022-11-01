@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onDestroy, onMount } from "svelte";
+    import { onDestroy, onMount, tick } from "svelte";
     import type { ChartConfiguration } from "chart.js";
 
     import GraphCard, { CardElement } from "../components/GraphCard.svelte";
@@ -62,9 +62,14 @@
                 await store.remove(id);
                 store.commit();
 
-                const i = cards.findIndex((e) => e.id === id);
+                const i = cards.indexOf(card);
                 cards.splice(i, 1);
-                cards = cards;
+
+                const _cards = [...cards];
+                cards = [];
+
+                await tick();
+                cards = _cards;
             },
         };
 

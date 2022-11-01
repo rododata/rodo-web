@@ -245,7 +245,7 @@
 
 <style lang="postcss">
     div.graph {
-        @apply relative w-full h-[300px];
+        @apply relative w-full min-h-[300px];
     }
 
     div.graph.graph-hidden {

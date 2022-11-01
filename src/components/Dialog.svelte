@@ -37,6 +37,7 @@
         > div.content {
             @apply flex flex-col;
             @apply min-w-[480px] min-h-[300px] p-4;
+            @apply max-h-[90%] overflow-y-auto;
             @apply rounded shadow-xl;
             @apply bg-white;
 
